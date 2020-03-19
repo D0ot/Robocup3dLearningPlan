@@ -1,6 +1,8 @@
 # Robocup 3D simulation 平台下载与安装
 
-RoboCup 3D仿真模拟平台简易安装教程
+RoboCup 3D仿真模拟平台简易安装教程。
+
+大部分安装过程为自动的，也可参考该篇文档学习手动安装：[]
 
 ---
 
@@ -38,5 +40,3 @@ wget -O- https://gitee.com/doot/Robocup3dInstaller/raw/gitee/ins.sh | sh
 ![avator](4.png)
 
 ---
-
-work by d0ot@github.com
