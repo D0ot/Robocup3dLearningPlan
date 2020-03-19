@@ -2,7 +2,7 @@
 
 RoboCup 3D仿真模拟平台简易安装教程。
 
-大部分安装过程为自动的，也可参考该篇文档学习手动安装：[]
+大部分安装过程为自动的，熟悉Linux的同学也可参考该篇文档学习手动安装：[RCSoccerSim3dSetup](https://github.com/bluemoon93/RCSoccerSim3dSetup)
 
 ---
 
