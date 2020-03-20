@@ -1,10 +1,10 @@
-# 球队开发入门指南
+# 球队开发入门指南1
 
 本篇教程非常简单。将会一步一步教你如何运行球队底层代码的Demo，不会涉及到具体的代码实现细节。
 
-## 开始之前
+## 前置条件
 
-1. 安装有Ubuntu的虚拟机或者物理机。虚拟机的安装请参考文档`vminstall`
+1. 一台安装有Ubuntu的虚拟机或者物理机。虚拟机的安装请参考文档`vminstall`
 2. 已经安装RoboCup3D仿真平台。安装平台请参考文档`rcssserver3d`
 3. 熟悉简单的Ubuntu系统下的操作。了解如何在Ubuntu下面进行文件的编辑。了解Ubuntu下的终端命令。
 4. VSCode已经安装。未安装请到[VSCode](https://code.visualstudio.com/)下载，使用Ubuntu的同学下载Linux64位版本deb包。下载完成后直接双击安装即可。
@@ -87,4 +87,4 @@ rcsoccersim3d
 
 ![avator](7.png)
 
-这就是球队的Demo。
+这就是球队的Demo，
