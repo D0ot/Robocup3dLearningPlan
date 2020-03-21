@@ -31,64 +31,9 @@ RoboCup 3D足球模拟采用C/S架构模式。模拟平台作为服务器(Server
 
 ```cpp
 SkillType NaoBehavior::demoKickingCircle() {
-    // Parameters for circle
-    VecPosition center = VecPosition(-HALF_FIELD_X/2.0, 0, 0);
-    double circleRadius = 5.0;
-    double rotateRate = 2.5;
-
-    // Find closest player to ball
-    int playerClosestToBall = -1;
-    double closestDistanceToBall = 10000;
-    for(int i = WO_TEAMMATE1; i < WO_TEAMMATE1+NUM_AGENTS; ++i) {
-        VecPosition temp;
-        int playerNum = i - WO_TEAMMATE1 + 1;
-        if (worldModel->getUNum() == playerNum) {
-            // This is us
-            temp = worldModel->getMyPosition();
-        } else {
-            WorldObject* teammate = worldModel->getWorldObject( i );
-            if (teammate->validPosition) {
-                temp = teammate->pos;
-            } else {
-                continue;
-            }
-        }
-        temp.setZ(0);
-
-        double distanceToBall = temp.getDistanceTo(ball);
-        if (distanceToBall < closestDistanceToBall) {
-            playerClosestToBall = playerNum;
-            closestDistanceToBall = distanceToBall;
-        }
-    }
-
-    if (playerClosestToBall == worldModel->getUNum()) {
-        // Have closest player kick the ball toward the center
-        return kickBall(KICK_FORWARD, center);
-    } else {
-        // Move to circle position around center and face the center
-        VecPosition localCenter = worldModel->g2l(center);
-        SIM::AngDeg localCenterAngle = atan2Deg(localCenter.getY(), localCenter.getX());
-
-        // Our desired target position on the circle
-        // Compute target based on uniform number, rotate rate, and time
-        VecPosition target = center + VecPosition(circleRadius,0,0).rotateAboutZ(360.0/(NUM_AGENTS-1)*(worldModel->getUNum()-(worldModel->getUNum() > playerClosestToBall ? 1 : 0)) + worldModel->getTime()*rotateRate);
-
-        // Adjust target to not be too close to teammates or the ball
-        target = collisionAvoidance(true /*teammate*/, false/*opponent*/, true/*ball*/, 1/*proximity thresh*/, .5/*collision thresh*/, target, true/*keepDistance*/);
-
-        if (me.getDistanceTo(target) < .25 && abs(localCenterAngle) <= 10) {
-            // Close enough to desired position and orientation so just stand
-            return SKILL_STAND;
-        } else if (me.getDistanceTo(target) < .5) {
-            // Close to desired position so start turning to face center
-            return goToTargetRelative(worldModel->g2l(target), localCenterAngle);
-        } else {
-            // Move toward target location
-            return goToTarget(target);
-        }
-    }
-
+    // ......
+    // 具体内容省略
+}
 ```
 
 这里就是我们所运行出来的demo的实现部分。大家可以自己看一下大致的逻辑，本篇文章不会讲解该Demo。
@@ -115,14 +60,57 @@ SkillType demoKicking();
 ```cpp
 SkillType NaoBehavior::demoKicking()
 {
-    if(worldmodel->getPlayMode() != PM_PLAYON)
+    if (worldModel->getPlayMode() == PM_PLAY_ON && worldModel->getUNum() == 11)
     {
-
+        return kickBall(KICK_FORWARD, VecPosition(HALF_FIELD_X, 0, 0));
     }
+    return SKILL_STAND;
 }
+```
 
+然后在`behaviors/strategy.cc`的文件中，吧`selectSkill()`的返回语句改为：
 
+```cpp
+// return demoKickingCicrcle();
+return demoKicking();
+```
 
+现在我们重新构建一下。
+
+命令行中输入
+
+```sh
+cmake .
+make -j2
+```
+
+等待构建完成。
+
+随后运行平台，运行`start.sh`，在监视器窗口中按o键打开模式切换，切换模式到`PlayOn`，随后我们会发现0-10号机器人会原地不动，11号机器人会去一直向x轴正方向踢球，直到进球。
+
+### 下面将逐句讲解内容
+
+```cpp
+if (worldModel->getPlayMode() == PM_PLAY_ON && worldModel->getUNum() == 11)
+```
+该句判断当前的模式以及球员编号。如果模式为`PlayON`而且球员为11号，那么
+
+```cpp
+return kickBall(KICK_FORWARD, VecPosition(HALF_FIELD_X, 0, 0));
+```
+
+就调用`KickBall()`函数(必须使用`KickBall()`的返回值作为`demoKicking()`的返回值)，第一个参数为踢球类型，第二个参数为踢向的方向。
+
+```cpp
+return SKILL_STAND;
+```
+最后对于不满足这两个条件的球员，返回一个简单的`SKILL_STAND`来站立不动。
+
+---
+
+## VSCode使用建议
+
+建议安装`C/C++`插件，可以实现自动补全、符号查找、引用查找等功能。
 
 
 
